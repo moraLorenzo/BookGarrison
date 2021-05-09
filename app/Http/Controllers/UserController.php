@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,7 +29,13 @@ class UserController extends Controller
     {
         //
         $user = Auth::user();
-        return view('user.index', compact('user'));
+        $qty =   Book::select('book_name', 'book_genre', 'book_author')
+        ->selectRaw('count(book_name) as qty')
+        ->groupBy('book_name', 'book_genre', 'book_author')
+        ->orderBy('qty', 'DESC')
+        ->get();
+        return view('user.index', compact('qty','user'));
+        
     }
 
     /**
@@ -58,9 +65,15 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show($unique)
     {
         //
+
+        $show = Book::get()->where('book_name', $unique);
+        // dd($show);
+        $you = Auth::user();
+        return view('user.show', compact('show','you'));
+
     }
 
     /**
