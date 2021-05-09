@@ -42,6 +42,16 @@
                                 <ul class="list-group list-group-flush">
                                   <li class="list-group-item">{{ $book->book_genre }}</li>
                                   <li class="list-group-item">{{ $book->status }}</li>
+                                  @if($book->status == "Available")
+                                  <li class="list-group-item">
+                                    <form method="POST" action="{{ route('user.update', $book->id) }}" enctype="multipart/form-data">
+                                      @method('PATCH')
+                                      @csrf
+                                        <button type="submit" class="btn btn-success">Request</button>
+                                    </form>
+                                  </li>
+                                  @endif
+
                                   @if($you->id == $book->user_id)
                                   <li class="list-group-item">You requested for this</li>
                                   @endif

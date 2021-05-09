@@ -115,11 +115,10 @@ class BookController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update($id, $status)
+    public function update($id)
     {
         //
         
-
     }
 
     /**
