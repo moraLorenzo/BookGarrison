@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use App\Models\Book;
+use DB;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -18,6 +19,7 @@ class AdminController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->reservation_expired();
     }
 
     /**
@@ -140,5 +142,15 @@ class AdminController extends Controller
         $book->delete();
 
         return redirect('/book');
+    }
+
+    public function reservation_expired(){
+
+        $affected = DB::table('books')
+            ->where('updated_at', '<=', Carbon::now()->subDays(3)->toDateString())
+            ->update(['updated_at' => Carbon::now()->toDateString(),'user_id' => null, 'status' => 'Available']);
+
+        return redirect('/book');
+        
     }
 }
