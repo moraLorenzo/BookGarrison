@@ -27,6 +27,9 @@ class BookController extends Controller
     public function index()
     {
         $books = Book::get();
+        // $books = $user->posts
+        $result = $books->user;
+        dd($result);
         return view('admin.index', compact('books'));
     }
 
@@ -146,8 +149,6 @@ class BookController extends Controller
             $book->save();
         }
 
-        
-
-        return redirect('/book');
+        return redirect('/admin');
     }
 }

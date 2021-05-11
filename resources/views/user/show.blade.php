@@ -9,7 +9,7 @@
             <br>
             <br>
 
-                    @isset($show,$you)
+                    @isset($show,$you,$users)
 
                     {{-- <table class="table table-borderless bg-light table-hover" style="width: 100%">
                         <thead
@@ -53,7 +53,13 @@
                                   @endif
 
                                   @if($you->id == $book->user_id)
-                                  <li class="list-group-item">You requested for this</li>
+                                    <li class="list-group-item">You requested for this</li>
+                                  @else
+                                    @foreach ($users as $borrower)
+                                      @if( $book->user_id == $borrower->id)
+                                        <li class="list-group-item">{{ $borrower->name }} requested for this</li>
+                                      @endif
+                                    @endforeach
                                   @endif
                                 </ul>
                             <div class="card-body">

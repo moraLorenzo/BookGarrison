@@ -31,7 +31,8 @@ class AdminController extends Controller
     {
         //
 
-        $books = Book::get();
+        $books = Book::orderBy('updated_at', 'DESC')->get();
+        // dd($books);
         return view('admin.index', compact('books'));
     }
 
@@ -126,7 +127,8 @@ class AdminController extends Controller
         $book->book_img = $fileNameToStore;
         $book->save();
 
-        return redirect('/book');
+        $this->index();
+        // return redirect('/book');
     }
 
     /**
@@ -141,7 +143,7 @@ class AdminController extends Controller
         $book = Book::find($admin);
         $book->delete();
 
-        return redirect('/book');
+        return redirect('/admin');
     }
 
     public function reservation_expired(){
@@ -150,7 +152,7 @@ class AdminController extends Controller
             ->where('updated_at', '<=', Carbon::now()->subDays(3)->toDateString())
             ->update(['updated_at' => Carbon::now()->toDateString(),'user_id' => null, 'status' => 'Available']);
 
-        return redirect('/book');
+            $this->index();
         
     }
 }

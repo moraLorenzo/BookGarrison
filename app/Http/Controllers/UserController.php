@@ -27,13 +27,14 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        
         $user = Auth::user();
         $qty =   Book::select('book_name', 'book_genre', 'book_author')
         ->selectRaw('count(book_name) as qty')
         ->groupBy('book_name', 'book_genre', 'book_author')
         ->orderBy('qty', 'DESC')
         ->get();
+        
         return view('user.index', compact('qty','user'));
         
     }
@@ -72,7 +73,9 @@ class UserController extends Controller
         $show = Book::get()->where('book_name', $unique);
         // dd($show);
         $you = Auth::user();
-        return view('user.show', compact('show','you'));
+        $users = User::all();
+        // dd($users);
+        return view('user.show', compact('show','you','users'));
 
     }
 
@@ -117,5 +120,32 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         //
+    }
+
+
+    public function check_requested($id)
+    {
+        $user = User::find(Auth::id());
+        $books = $user->posts()->where('book_name','!=','')->get();
+        // dd($books);
+        return view('user.select', compact('books'));
+    }
+
+    public function cancel($id, $status){
+        if($status == "Available"){
+            $book = Book::find($id);
+            $book->status = $status;
+            $book->user_id = null;
+            $book->save();
+        }
+        else{
+            $book = Book::find($id);
+            $book->status = $status;
+            $book->save();
+        }
+
+        
+
+        return redirect('/user');
     }
 }

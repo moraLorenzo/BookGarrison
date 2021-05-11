@@ -6,14 +6,14 @@
     
     <div class="row justify-content-center">
         <div class="col-md-8">
-              {{-- <a class="btn button btn-outline-primary" href="/book/create">Add Book <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-              </svg></a> --}}
             <br>
             <br>
-           
-
                     @isset($qty, $user)
+                    <form method="GET" action="{{ route('user.check_requested', ['id'=>$user->id]) }}" enctype="multipart/form-data">
+                      @csrf
+                      <button type="submit" class="btn btn-success">Show Requested</button>
+                    </form>
+                    <br>
 
                     <table class="table table-borderless bg-light table-hover" style="width: 100%">
                         <thead
@@ -38,6 +38,29 @@
                           @endforeach
                         </tbody>
                       </table>
+
+                      {{-- Kung trip niyo naka-grid, uncomment niyo tong nasa baba.
+                      Tapos comment niyo yung table --}}
+
+                      {{-- @foreach($qty->chunk(3) as $books)
+                      <div class="row mt-3">
+                        @foreach($books as $book)
+                        <div class="col-md-4 portfolio-item" onClick="location.href='/user/{{ $book->book_name }}'">
+                            <div class="card mx-auto">
+                              <div class="card-body">
+                                <h5 class="card-title">{{ $book->book_name }}</h5>
+                                <p class="card-text">{{ $book->book_author }}</p>
+                              </div>
+                                  <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">Genre: {{ $book->book_genre }}</li>
+                                    <li class="list-group-item">Quantity: {{ $book->qty }}</li>   
+                                  </ul>
+                              <div class="card-body"></div>
+                          </div>
+                        </div>
+                        @endforeach
+                      </div>
+                      @endforeach --}}
 
                     @endisset
                 </div>
