@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Book;
+use DB;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,15 +29,26 @@ class UserController extends Controller
      */
     public function index()
     {
-        
+        $collection = collect([]);
+
         $user = Auth::user();
         $qty =   Book::select('book_name', 'book_genre', 'book_author')
         ->selectRaw('count(book_name) as qty')
         ->groupBy('book_name', 'book_genre', 'book_author')
         ->orderBy('qty', 'DESC')
         ->get();
+
+        for($i = 0;$i<$qty->count();$i++)
+            {
+                // $collection = $qty[$i]->book_name;
+                $result = Book::select('book_img')->where('book_name', $qty[$i]->book_name)->take(1)->get();
+                 $collection->push(                     
+                    $result[0]->book_img
+                    );
+            }
+        // dd($collection);
         
-        return view('user.index', compact('qty','user'));
+        return view('user.index', compact('qty','user','collection'));
         
     }
 

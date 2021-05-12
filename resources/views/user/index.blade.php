@@ -8,12 +8,13 @@
         <div class="col-md-8">
             <br>
             <br>
-                    @isset($qty, $user)
+                    @isset($qty, $user, $collection)
                     <form method="GET" action="{{ route('user.check_requested', ['id'=>$user->id]) }}" enctype="multipart/form-data">
                       @csrf
                       <button type="submit" class="btn btn-success">Show Requested</button>
                     </form>
                     <br>
+
 
                     <table class="table table-borderless bg-light table-hover" style="width: 100%">
                         <thead
@@ -25,6 +26,7 @@
                             <th scope="col">Genre</th>
                             <th scope="col">Author</th>
                             <th scope="col">Quantity</th>
+                            <th scope="col">Poster</th>
                           </tr>
                         </thead>
                         <tbody class="table">
@@ -34,6 +36,7 @@
                             <td>{{ $book->book_genre }}</td>
                             <td>{{ $book->book_author }}</td>
                             <td>{{ $book->qty }}</td>
+                            <td><img style="width:100px; height:150px;" src="{{ asset('/storage/img/'.$collection[$loop->index]) }}" alt="No image found"></td>
                           </tr>
                           @endforeach
                         </tbody>
