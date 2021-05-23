@@ -36,16 +36,16 @@ class UserController extends Controller
         ->groupBy('book_name', 'book_genre', 'book_author')
         ->orderBy('qty', 'DESC')
         ->get();
-        
+
         for($i = 0;$i<$qty->count();$i++)
-        {
-            // $collection = $qty[$i]->book_name;
-            $result = Book::select('book_img')->where('book_name', $qty[$i]->book_name)->take(1)->get();
-             $collection->push(                     
-                $result[0]->book_img
-                );
-        }
-    // dd($collection);
+            {
+                // $collection = $qty[$i]->book_name;
+                $result = Book::select('book_img')->where('book_name', $qty[$i]->book_name)->take(1)->get();
+                 $collection->push(                     
+                    $result[0]->book_img
+                    );
+            }
+        // dd($collection);
 
     return view('user.index', compact('qty','user','collection'));
         

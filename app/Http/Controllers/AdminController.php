@@ -127,8 +127,7 @@ class AdminController extends Controller
         $book->book_img = $fileNameToStore;
         $book->save();
 
-        $this->index();
-        // return redirect('/book');
+        return redirect('/admin');
     }
 
     /**
@@ -152,7 +151,7 @@ class AdminController extends Controller
             ->where('updated_at', '<=', Carbon::now()->subDays(3)->toDateString())
             ->update(['updated_at' => Carbon::now()->toDateString(),'user_id' => null, 'status' => 'Available']);
 
-            $this->index();
+            return redirect('/admin');
         
     }
 }

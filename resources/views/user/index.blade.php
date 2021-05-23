@@ -15,7 +15,10 @@
             <br>
             <h5 class="h2 text-black font-weight-bold">Welcome {{ Auth::user()->name }}!</h5>
             <br>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4ffc681c3889d74dbd45b8b9ce015882768971c4
                     @isset($qty, $user, $collection)
                     <form method="GET" action="{{ route('user.check_requested', ['id'=>$user->id]) }}" enctype="multipart/form-data">
                       @csrf
