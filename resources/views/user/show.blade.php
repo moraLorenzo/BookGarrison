@@ -10,30 +10,8 @@
             <br>
 
                     @isset($show,$you,$users)
-
-                    {{-- <table class="table table-borderless bg-light table-hover" style="width: 100%">
-                        <thead
-                          class="text-white bg-dark"
-                          style="border-radius: 25%"
-                        >
-                          <tr>
-                            <th scope="col">Title</th>
-                            <th scope="col">Genre</th>
-                            <th scope="col">Author</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Poster</th>
-                          </tr>
-                        </thead>
-                        <tbody class="table"> --}}
                           @foreach ($show as $book)
-                          {{-- <tr onClick="location.href='/user/{{ $book->id }}'">
-                            <td>{{ $book->book_name }}</td>
-                            <td>{{ $book->book_genre }} </td>
-                            <td>{{ $book->book_author }}</td>
-                            <td>{{ $book->book_author }}</td>
-                            <td><img style="width:100px; height:150px;" src="{{ asset('/storage/img/'.$book->book_img) }}" alt="No image found"></td>
-                          </tr> --}}
-                          <div class="card mx-auto card mx-auto font-weight-bold text-white custom-box" style="width: 24rem;margin-bottom: 10%;" onClick="location.href='/reservation/{{ $book->id }}'">
+                          <div class="card mx-auto card mx-auto font-weight-bold text-white custom-box" style="width: 24rem;margin-bottom: 10%;" >
                             <img class="card-img-top" src="{{ asset('/storage/img/'.$book->book_img) }}" alt="Card image cap">
                             <div class="card-body bg-black h4 font-weight-bolder text-white">
                               <h5 class="card-title">{{ $book->book_name }}</h5>
@@ -90,13 +68,8 @@
                                     @endforeach
                                   @endif
                                 </ul>
-                            <!-- <div class="card-body">
-                            </div> -->
                           </div>
                           @endforeach
-                        {{-- </tbody>
-                      </table> --}}
-
                     @endisset
                 </div>
     </div>

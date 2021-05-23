@@ -28,8 +28,8 @@ class BookController extends Controller
     {
         $books = Book::get();
         // $books = $user->posts
-        $result = $books->user;
-        dd($result);
+        // $result = $books->user;
+        // dd($result);
         return view('admin.index', compact('books'));
     }
 
@@ -60,7 +60,7 @@ class BookController extends Controller
             'book_name' => 'required|max:255',
             'book_author' => 'required',
             'book_genre' => 'required',
-            'book_img' => 'required'
+            'img' => 'required'
         ]);
         
         if($request->hasFile('img')){
@@ -83,6 +83,7 @@ class BookController extends Controller
         $book->book_author = $request->book_author;
         $book->book_genre = $request->book_genre;
         $book->book_img = $fileNameToStore;
+        $book->status = 'Available';
         $book->save();
 
         return redirect('/book');
