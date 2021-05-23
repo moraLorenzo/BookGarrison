@@ -8,8 +8,8 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">       
-                <div class="card-header card-light bg-dark h3 text-light">Add New Book</div>
-                <div class="card-body">
+                <div class="card-header bg-black h3 font-weight-bolder text-white">Add New Book</div>
+                <div class="card-body bg-black text-white font-weight-bold">
                  
                    
                         <form method="POST" action="{{ route('book.store') }}" enctype="multipart/form-data">
@@ -73,7 +73,7 @@
                               
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-block btn-outline-primary">
+                                    <button type="submit" class="btn btn-block btn-secondary">
                                         {{ __('Submit') }}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-check" viewBox="0 0 16 16">
                                             <path d="M10.854 7.854a.5.5 0 0 0-.708-.708L7.5 9.793 6.354 8.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>

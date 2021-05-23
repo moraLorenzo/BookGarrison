@@ -20,12 +20,14 @@ class BookSeeder extends Seeder
                'book_genre'=>'Fantasy Fiction',
                'book_author'=>'J. K. Rowling',
                'book_img'=>'harry_potter(1).jpg',
+               'status'=>'Available',
             ],
             [
                 'book_name'=>'Harry Potter and the Chamber of Secrets',
                 'book_genre'=>'Fantasy Fiction',
                 'book_author'=>'J. K. Rowling',
                 'book_img'=>'harry_potter(2).jpg',
+                'status'=>'Available',
 
             ],
             [
@@ -33,30 +35,35 @@ class BookSeeder extends Seeder
                 'book_genre'=>'Fantasy Fiction',
                 'book_author'=>'J. K. Rowling',
                 'book_img'=>'harry_potter(3).jpg',
+                'status'=>'Available',
             ],
             [
                 'book_name'=>'Harry Potter and the Goblet of Fire',
                 'book_genre'=>'Fantasy Fiction',
                 'book_author'=>'J. K. Rowling',
                 'book_img'=>'harry_potter(4).jpg',
+                'status'=>'Available',
             ],
             [
                 'book_name'=>'Harry Potter and the Order of the Phoenix',
                 'book_genre'=>'Fantasy Fiction',
                 'book_author'=>'J. K. Rowling',
                 'book_img'=>'harry_potter(5).jpg',
+                'status'=>'Available',
             ],
             [
                 'book_name'=>'Harry Potter and the Half-Blood Prince',
                 'book_genre'=>'Fantasy Fiction',
                 'book_author'=>'J. K. Rowling',
                 'book_img'=>'harry_potter(6).jpg',
+                'status'=>'Available',
             ],
             [
                 'book_name'=>'Harry Potter and the Deathly Hallows',
                 'book_genre'=>'Fantasy Fiction',
                 'book_author'=>'J. K. Rowling',
                 'book_img'=>'harry_potter(7).jpg',
+                'status'=>'Available',
             ],
         ];
   
