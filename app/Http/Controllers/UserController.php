@@ -30,6 +30,7 @@ class UserController extends Controller
     public function index()
     {
         $collection = collect([]);
+        $available = collect([]);
         $user = Auth::user();
         $qty =   Book::select('book_name', 'book_genre', 'book_author')
         ->selectRaw('count(book_name) as qty')
@@ -40,14 +41,23 @@ class UserController extends Controller
         for($i = 0;$i<$qty->count();$i++)
             {
                 // $collection = $qty[$i]->book_name;
+                $res = Book::all()->where('book_name', $qty[$i]->book_name)->where('status','Available')->count();
+                $available->push(
+                    $res
+                );
+
+
                 $result = Book::select('book_img')->where('book_name', $qty[$i]->book_name)->take(1)->get();
                  $collection->push(                     
                     $result[0]->book_img
                     );
+                    
             }
+            // dd($available);
         // dd($collection);
+        // dd($qty);
 
-    return view('user.index', compact('qty','user','collection'));
+    return view('user.index', compact('qty','user','collection','available'));
         
         
     }

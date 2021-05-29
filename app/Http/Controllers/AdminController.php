@@ -30,8 +30,21 @@ class AdminController extends Controller
     public function index()
     {
         //
+        $books = new \Illuminate\Database\Eloquent\Collection;
 
-        $books = Book::orderBy('updated_at', 'DESC')->get();
+        $available = Book::where('status', 'Available')->orderBy('updated_at', 'DESC')->get();
+        $pending = Book::where('status', 'Pending')->orderBy('updated_at', 'DESC')->get();
+        $waiting = Book::where('status', 'Waiting for Pick up')->orderBy('updated_at', 'DESC')->get();
+        $borrowed = Book::where('status', 'Borrowed')->orderBy('updated_at', 'DESC')->get();
+
+        $books = $books->merge($waiting);
+        $books = $books->merge($pending);
+        $books = $books->merge($borrowed);
+        $books = $books->merge($available);
+
+        // $books = Book::orderBy('updated_at', 'DESC')->get();
+        // $books = Book::orderBy('status', 'DESC')->get();
+        
         // dd($books);
         return view('admin.index', compact('books'));
     }
@@ -98,6 +111,8 @@ class AdminController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $book_img_backup = Book::find($id);
+        // dd($book_img_backup);
         
         $request->validate([
             'book_name' => 'required|max:255',
@@ -117,7 +132,7 @@ class AdminController extends Controller
 
             $path = $request->file('book_img')->storeAs('public/img', $fileNameToStore);
         } else{
-            $fileNameToStore = '';
+            $fileNameToStore = $book_img_backup->book_img;
         }
 
         $book = Book::find($id);
