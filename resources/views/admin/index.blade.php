@@ -12,9 +12,10 @@
             <br>
             <br>
     
-                @isset($books)
+                {{-- @isset($books) --}}
+                @isset($available,$pending,$waiting,$borrowed)
 
-                <table class="table table-striped bg-light table-hover custom-table custom-box" style="width: 100%">
+                <table class="table bg-light table-hover custom-table custom-box" style="width: 100%">
                     <thead
                       class="text-white bg-black"
                       style="border-radius: 25%"
@@ -60,8 +61,170 @@
                       </tr>
                     </thead>
                     <tbody class="table">
-                      @foreach ($books as $book)
-                      <tr onClick="location.href='/admin/{{ $book->id }}'">
+                      @foreach ($borrowed as $book)
+                      <tr class="table-success" onClick="location.href='/admin/{{ $book->id }}'">
+                        <td>{{ $book->book_name }}</td>
+                        <td>{{ $book->book_genre }}</td>
+                        <td>{{ $book->status }}</td>
+                        <td>{{ $book->user_id }}</td>
+                        <td><img style="width:100px; height:150px;background-color:#c7eed8" src="{{ asset('/storage/img/'.$book->book_img) }}" alt="No image found"></td>
+                        <td>
+                          
+                              @if ($book->status == "Pending")
+
+                              <form method="POST" action="{{ route('book.update_status', ['id'=>$book->id,'status'=>'Waiting for Pick up']) }}" enctype="multipart/form-data">
+                                @method('PATCH')
+                                @csrf
+                                  <button type="submit" class="btn btn-success font-weight-bold bg-success">Accept
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-check" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                                    <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                                  </svg>
+                                  </button>
+                              </form>
+
+                              @elseif ($book->status == "Waiting for Pick up")
+                                
+                              <form method="POST" action="{{ route('book.update_status', ['id'=>$book->id,'status'=>'Borrowed']) }}" enctype="multipart/form-data">
+                                @method('PATCH')
+                                @csrf
+                                <button type="submit" class="btn btn-success font-weight-bold bg-success">Picked up
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-check" viewBox="0 0 16 16">
+                                  <path fill-rule="evenodd" d="M10.854 8.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                  <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
+                                </svg>
+                                </button>
+                              </form>
+                                
+                              
+                              @elseif ($book->status == "Borrowed")
+                                
+                                <form method="POST" style="background-color:#c7eed8" action="{{ route('book.update_status', ['id'=>$book->id,'status'=>'Available']) }}" enctype="multipart/form-data">
+                                  @method('PATCH')
+                                  @csrf
+                                  <button type="submit" class="btn btn-success font-weight-bold">Returned
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-basket" viewBox="0 0 16 16">
+                                    <path d="M5.757 1.071a.5.5 0 0 1 .172.686L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1v4.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 13.5V9a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1.217L5.07 1.243a.5.5 0 0 1 .686-.172zM2 9v4.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V9H2zM1 7v1h14V7H1zm3 3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 4 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 6 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 8 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5z"/>
+                                  </svg>
+                                  </button>
+                                </form>
+                              
+                              @endif
+                        
+                        </td>
+                      </tr>
+                      @endforeach
+                      @foreach ($waiting as $book)
+                      <tr class="table-primary" onClick="location.href='/admin/{{ $book->id }}'">
+                        <td>{{ $book->book_name }}</td>
+                        <td>{{ $book->book_genre }}</td>
+                        <td>{{ $book->status }}</td>
+                        <td>{{ $book->user_id }}</td>
+                        <td><img style="width:100px; height:150px;background-color:#c6e0f5" src="{{ asset('/storage/img/'.$book->book_img) }}" alt="No image found"></td>
+                        <td>
+                          
+                              @if ($book->status == "Pending")
+
+                              <form method="POST" action="{{ route('book.update_status', ['id'=>$book->id,'status'=>'Waiting for Pick up']) }}" enctype="multipart/form-data">
+                                @method('PATCH')
+                                @csrf
+                                  <button type="submit" class="btn btn-success font-weight-bold">Accept
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-check" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                                    <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                                  </svg>
+                                  </button>
+                              </form>
+
+                              @elseif ($book->status == "Waiting for Pick up")
+                                
+                              <form method="POST" style="background-color:#c6e0f5" action="{{ route('book.update_status', ['id'=>$book->id,'status'=>'Borrowed']) }}" enctype="multipart/form-data">
+                                @method('PATCH')
+                                @csrf
+                                <button type="submit" class="btn btn-success font-weight-bold">Picked up
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-check" viewBox="0 0 16 16">
+                                  <path fill-rule="evenodd" d="M10.854 8.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                  <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
+                                </svg>
+                                </button>
+                              </form>
+                                
+                              
+                              @elseif ($book->status == "Borrowed")
+                                
+                                <form method="POST" action="{{ route('book.update_status', ['id'=>$book->id,'status'=>'Available']) }}" enctype="multipart/form-data">
+                                  @method('PATCH')
+                                  @csrf
+                                  <button type="submit" class="btn btn-success font-weight-bold">Returned
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-basket" viewBox="0 0 16 16">
+                                    <path d="M5.757 1.071a.5.5 0 0 1 .172.686L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1v4.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 13.5V9a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1.217L5.07 1.243a.5.5 0 0 1 .686-.172zM2 9v4.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V9H2zM1 7v1h14V7H1zm3 3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 4 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 6 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 8 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5z"/>
+                                  </svg>
+                                  </button>
+                                </form>
+                              
+                              @endif
+                        
+                        </td>
+                      </tr>
+                      @endforeach
+                      @foreach ($pending as $book)
+                      <tr class="table-secondary" onClick="location.href='/admin/{{ $book->id }}'">
+                        <td>{{ $book->book_name }}</td>
+                        <td>{{ $book->book_genre }}</td>
+                        <td>{{ $book->status }}</td>
+                        <td>{{ $book->user_id }}</td>
+                        <td><img style="width:100px; height:150px;background-color:#d6d8d8" src="{{ asset('/storage/img/'.$book->book_img) }}" alt="No image found"></td>
+                        <td>
+                          
+                              @if ($book->status == "Pending")
+
+                              <form method="POST" style="background-color:#d6d8d8" action="{{ route('book.update_status', ['id'=>$book->id,'status'=>'Waiting for Pick up']) }}" enctype="multipart/form-data">
+                                @method('PATCH')
+                                @csrf
+                                  <button type="submit" class="btn btn-success font-weight-bold">Accept
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-check" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                                    <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                                  </svg>
+                                  </button>
+                              </form>
+
+                              @elseif ($book->status == "Waiting for Pick up")
+                                
+                              <form method="POST" action="{{ route('book.update_status', ['id'=>$book->id,'status'=>'Borrowed']) }}" enctype="multipart/form-data">
+                                @method('PATCH')
+                                @csrf
+                                <button type="submit" class="btn btn-success font-weight-bold">Picked up
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-check" viewBox="0 0 16 16">
+                                  <path fill-rule="evenodd" d="M10.854 8.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                  <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
+                                </svg>
+                                </button>
+                              </form>
+                                
+                              
+                              @elseif ($book->status == "Borrowed")
+                                
+                                <form method="POST" action="{{ route('book.update_status', ['id'=>$book->id,'status'=>'Available']) }}" enctype="multipart/form-data">
+                                  @method('PATCH')
+                                  @csrf
+                                  <button type="submit" class="btn btn-success font-weight-bold">Returned
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-basket" viewBox="0 0 16 16">
+                                    <path d="M5.757 1.071a.5.5 0 0 1 .172.686L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1v4.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 13.5V9a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1.217L5.07 1.243a.5.5 0 0 1 .686-.172zM2 9v4.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V9H2zM1 7v1h14V7H1zm3 3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 4 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 6 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 8 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5z"/>
+                                  </svg>
+                                  </button>
+                                </form>
+                              
+                              @endif
+                        
+                        </td>
+                      </tr>
+                      @endforeach
+                      @foreach ($available as $book)
+                      <tr class="table-warning" onClick="location.href='/admin/{{ $book->id }}'">
                         <td>{{ $book->book_name }}</td>
                         <td>{{ $book->book_genre }}</td>
                         <td>{{ $book->status }}</td>

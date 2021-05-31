@@ -124,13 +124,15 @@ class UserController extends Controller
     {
         //
         $you = Auth::user();
-        // dd($id, $you);
+        // dd("hello");
         $book = Book::find($id);
         $book->status = 'Pending';
         $book->user_id = $you->id;
         $book->save();
+        
 
-        return back();
+        // return back();
+        return redirect('/user');
 
     }
 

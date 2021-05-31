@@ -37,16 +37,17 @@ class AdminController extends Controller
         $waiting = Book::where('status', 'Waiting for Pick up')->orderBy('updated_at', 'DESC')->get();
         $borrowed = Book::where('status', 'Borrowed')->orderBy('updated_at', 'DESC')->get();
 
-        $books = $books->merge($waiting);
-        $books = $books->merge($pending);
-        $books = $books->merge($borrowed);
-        $books = $books->merge($available);
+        // $books = $books->merge($waiting);
+        // $books = $books->merge($pending);
+        // $books = $books->merge($borrowed);
+        // $books = $books->merge($available);
 
         // $books = Book::orderBy('updated_at', 'DESC')->get();
         // $books = Book::orderBy('status', 'DESC')->get();
         
         // dd($books);
-        return view('admin.index', compact('books'));
+        // return view('admin.index', compact('books'));
+        return view('admin.index', compact('available','pending','waiting','borrowed'));
     }
 
     /**
