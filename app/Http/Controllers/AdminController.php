@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\Book;
+use DB;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -16,6 +19,7 @@ class AdminController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->reservation_expired();
     }
 
     /**
@@ -26,7 +30,10 @@ class AdminController extends Controller
     public function index()
     {
         //
-        return view('admin.index');
+
+        $books = Book::orderBy('updated_at', 'DESC')->get();
+        // dd($books);
+        return view('admin.index', compact('books'));
     }
 
     /**
@@ -56,9 +63,15 @@ class AdminController extends Controller
      * @param  \App\Models\Admin  $admin
      * @return \Illuminate\Http\Response
      */
-    public function show(Admin $admin)
+    public function show($unique)
     {
         //
+        // dd($unique);
+
+        $show = Book::get()->where('id', $unique);
+        // dd($show);
+        return view('admin.show', compact('show'));
+
     }
 
     /**
@@ -67,9 +80,12 @@ class AdminController extends Controller
      * @param  \App\Models\Admin  $admin
      * @return \Illuminate\Http\Response
      */
-    public function edit(Admin $admin)
+    public function edit($admin)
     {
         //
+        $edit = Book::find($admin);
+        // dd($edit);
+        return view('admin.edit', compact('edit'));
     }
 
     /**
@@ -79,9 +95,39 @@ class AdminController extends Controller
      * @param  \App\Models\Admin  $admin
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Admin $admin)
+    public function update(Request $request, $id)
     {
         //
+        
+        $request->validate([
+            'book_name' => 'required|max:255',
+            'book_author' => 'required',
+            'book_genre' => 'required'
+        ]);
+        
+        if($request->hasFile('book_img')){
+
+            $filenameWithExt = $request->file('book_img')->getClientOriginalName();
+
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+
+            $extension = $request->file('book_img')->getClientOriginalExtension();
+
+            $fileNameToStore = $filename.'_'.time().'.'.$extension;
+
+            $path = $request->file('book_img')->storeAs('public/img', $fileNameToStore);
+        } else{
+            $fileNameToStore = '';
+        }
+
+        $book = Book::find($id);
+        $book->book_name = $request->book_name;
+        $book->book_author = $request->book_author;
+        $book->book_genre = $request->book_genre;
+        $book->book_img = $fileNameToStore;
+        $book->save();
+
+        return redirect('/admin');
     }
 
     /**
@@ -90,8 +136,22 @@ class AdminController extends Controller
      * @param  \App\Models\Admin  $admin
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Admin $admin)
+    public function destroy($admin)
     {
         //
+        $book = Book::find($admin);
+        $book->delete();
+
+        return redirect('/admin');
+    }
+
+    public function reservation_expired(){
+
+        $affected = DB::table('books')
+            ->where('updated_at', '<=', Carbon::now()->subDays(3)->toDateString())
+            ->update(['updated_at' => Carbon::now()->toDateString(),'user_id' => null, 'status' => 'Available']);
+
+            return redirect('/admin');
+        
     }
 }
